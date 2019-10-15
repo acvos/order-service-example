@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "outDir": "./dist",
+    "target": "es2015",
+    "sourceMap": true,
+    "module": "commonjs",
+    "lib": ["es7"],
+    "types": ["node", "jest"]
+  },
+  "include": ["./src/**/*"]
+}

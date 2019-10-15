@@ -1,0 +1,160 @@
+{
+  "name": "inspection.contract",
+  "description": "Contract Specification",
+  "type": "record",
+  "fields": [
+    {
+      "name": "taskId",
+      "type": "string"
+    },
+    {
+      "name": "reportDate",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "inspectionCompanies",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "clientCompanies",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "referenceNumbers",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "fields": [
+            {
+              "name": "companyName",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "referenceNumber",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          ]
+        }
+      },
+      "default": []
+    },
+    {
+      "name": "historicProducts",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "fields": [
+            {
+              "name": "vessel",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "products",
+              "type": {
+                "type": "array",
+                "items": "string"
+              },
+              "default": []
+            }
+          ]
+        }
+      },
+      "default": []
+    },
+    {
+      "name": "operation",
+      "type": {
+        "type": "enum",
+        "symbols": [
+          "Load",
+          "Discharge",
+          "STS",
+          "Transfer"
+        ]
+      },
+      "default": "Load"
+    },
+    {
+      "name": "operationDate",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "vessels",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "cargos",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "ports",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "terminals",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "default": []
+    },
+    {
+      "name": "isRevised",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "isVarIncluded",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "loadPort",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "dischargePort",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "voyageNumber",
+      "type": "string",
+      "default": ""
+    }
+  ]
+}

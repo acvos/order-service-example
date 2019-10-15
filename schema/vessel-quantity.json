@@ -1,0 +1,249 @@
+{
+  "name": "inspection.vesselQuantity",
+  "description": "Vessel Quantity",
+  "type": "record",
+  "fields": [
+    {
+      "name": "taskId",
+      "type": "string"
+    },
+    {
+      "name": "quantities",
+      "default": [],
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "fields": [
+            {
+              "name": "movement",
+              "type": {
+                "type": "record",
+                "fields": [
+                  {
+                    "name": "date",
+                    "type": [
+                      "null",
+                      "string"
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "srcObjType",
+                    "type": "string"
+                  },
+                  {
+                    "name": "srcObjs",
+                    "type": {
+                      "type": "array",
+                      "items": "string"
+                    }
+                  },
+                  {
+                    "name": "destObjType",
+                    "type": "string"
+                  },
+                  {
+                    "name": "destObjs",
+                    "type": {
+                      "type": "array",
+                      "items": "string"
+                    }
+                  },
+                  {
+                    "name": "cargos",
+                    "type": {
+                      "type": "array",
+                      "items": "string"
+                    }
+                  },
+                  {
+                    "name": "locations",
+                    "type": {
+                      "type": "array",
+                      "items": "string"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "reportingFor",
+              "type": {
+                "type": "enum",
+                "symbols": [
+                  "Source",
+                  "Destination"
+                ]
+              }
+            },
+            {
+              "name": "terminalQuantityDetails",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name": "isOverride",
+                      "type": [
+                        "null",
+                        "boolean"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "overrideReason",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    }
+                  ]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "shoreTankQuantityDetails",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name": "isActive",
+                      "type": [
+                        "null",
+                        "boolean"
+                      ],
+                      "default": null
+                    }
+                  ]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "vesselQuantityDetails",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name": "inspectorVef",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    }
+                  ]
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "baselineUom",
+              "type": "string"
+            },
+            {
+              "name": "vcfTable",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "apiGravity60f",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "density60f",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "density15c",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            },
+            {
+              "name": "measurements",
+              "type": {
+                "type": "array",
+                "name": "measurements",
+                "items": {
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name": "measurement",
+                      "type": "string"
+                    },
+                    {
+                      "name": "before",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "after",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "delta",
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "default": null
+                    },
+                    {
+                      "name": "uom",
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "isPaperSplit",
+              "type": [
+                "null",
+                "boolean"
+              ],
+              "default": null
+            },
+            {
+              "name": "clientCompany",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
