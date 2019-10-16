@@ -1,6 +1,44 @@
-import { up, down } from './server'
+import { ExpressWebServer } from './adapters/express-server'
 import { logger } from './adapters/logger'
+import { StorageAdapter } from './adapters/storage'
+import { App } from './app'
+import { HttpApi } from './http-api'
+import { schema as shopSchema }from './schema/coffee-shop'
+import { schema as orderSchema }from './schema/order'
 
+// Ports
+const storage = new StorageAdapter({
+  logger,
+  schema: [shopSchema, orderSchema]
+})
+
+const server = new ExpressWebServer({
+  logger,
+  port: process.env.PORT
+})
+
+async function up() {
+  await storage.init()
+  await server.start()
+}
+
+async function down() {
+  await storage.stop()
+  await server.stop()
+}
+
+// Core
+const app = new App({ storage })
+
+// API
+new HttpApi({
+  storage,
+  app,
+  server,
+  debug: (process.env.DEBUG === 'true' || process.env.DEBUG === '1')
+})
+
+// Event binding
 process.on('SIGINT', async () => {
   logger.warn('SIGINT received! Exiting...')
 

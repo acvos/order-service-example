@@ -2,68 +2,56 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as expressLogging from 'express-logging'
 import * as cors from 'cors'
+import { LoggerInterface } from '../types'
 
 export class ExpressWebServer {
-  private logger
-  private healthChecks
+  private logger: LoggerInterface
   private server
+  private port
 
-  constructor({ logger, healthChecks = [] }) {
+  constructor({ port, logger }) {
+    this.port = port
     this.logger = logger
-    this.healthChecks = healthChecks
 
     this.server = express()
     this.server.use(cors())
     this.server.use(bodyParser.json())
     this.server.use(bodyParser.text())
     this.server.use(expressLogging(this.logger))
-
-    // Maintenance endpoints
-    this.server.get('/health', (req, res) => this.checkHealth(req, res))
   }
 
-  checkHealth(req, res) {
-    const failedChecks = this.healthChecks.filter(check => !check.handler())
+  async processRequest(handler, successStatus, req, res) {
+    const params = { ...(req.params || {}), ...(req.query || {}) }
 
-    if (failedChecks.length) {
-      res.status(500).json({
-        status: 'error',
-        details: failedChecks.map(check => check.message)
-      })
-    } else {
-      res.json({ status: 'ok' })
+    try {
+      const data = await handler({ params, body: req.body })
+
+      if (data === undefined) {
+        res.status(404).send()
+      } else {
+        res.status(successStatus).send(data)
+      }
+    } catch (err) {
+      if (err.name === 'ValidationError') {
+        this.logger.warn(err)
+        res.status(400).send({ message: err.message })
+      } else {
+        this.logger.error(err)
+        res.status(500).send({ message: 'Server error' })
+      }
     }
   }
 
-  mount(method, route, handler) {
-    this.server[method](route, (req, res) => {
-      const params = { ...(req.params || {}), ...(req.query || {}) }
-
-      try {
-        return handler({ params, body: req.body }, res)
-          .then(data => {
-            if (data === undefined) {
-              res.status(404).send()
-            } else {
-              res.send(data)
-            }
-          })
-          .catch(err => {
-            this.logger.error(err)
-            res.status(500).send({ message: 'System error' })
-          })
-      } catch (err) {
-        res.status(400).send({ message: err.message })
-      }
-    })
+  mount(method, route, handler, successStatus = 200) {
+    this.server[method](route, (req, res) => this.processRequest(handler, successStatus, req, res))
   }
 
-  start(port) {
+  start() {
     return new Promise((resolve) => {
       this.server.$nativeHttpServer = this.server.listen(
-        port,
+        this.port,
         () => {
-          this.logger.info(`[HTTP Server] listening on port ${port}`)
+          this.logger.info(`[HTTP Server] listening on port ${this.port}`)
           resolve()
         }
       )

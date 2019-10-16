@@ -19,9 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-logging": "^1.1.1",
-    "poly-map": "^2.2.4",
-    "refdata-storage": "^6.2.1",
-    "refdata-storage-filesystem-changelog": "^2.1.4"
+    "refdata-storage": "^6.2.1"
   },
   "devDependencies": {
     "@types/node": "^12.7.12",
