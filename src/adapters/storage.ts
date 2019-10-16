@@ -34,4 +34,8 @@ export class StorageAdapter {
   isConnected() {
     return true
   }
+
+  findSchema(query) {
+    return this.storage.findSchema(query)
+  }
 }

@@ -1,12 +1,14 @@
 import { ExpressWebServer } from './adapters/express-server'
 import { logger } from './adapters/logger'
 import { StorageAdapter } from './adapters/storage'
-import * as app from './app'
+import { App } from './app'
 
 const storage = new StorageAdapter({
   logger,
   schemaLocation: process.env.SCHEMA_LOCATION
 })
+
+const app = new App({ storage })
 
 const httpServer = new ExpressWebServer({
   logger,
@@ -18,20 +20,19 @@ const httpServer = new ExpressWebServer({
 })
 
 httpServer.mount('get', '/types', app.findSchemaNames)
-httpServer.mount('get', '/schemata', app.findSchemata)
-httpServer.mount('get', '/schema/:name', app.getSchema)
+httpServer.mount('get', '/types/:name', app.getSchema)
 
-httpServer.mount('get', '/document/:id', app.get)
-httpServer.mount('put', '/document/:id', app.update)
-httpServer.mount('get', '/document/:id/v/:version', app.get)
+httpServer.mount('get', '/coffee-shops', app.listCoffeeShops)
+httpServer.mount('post', '/coffee-shops', app.registerCoffeeShop)
+httpServer.mount('get', '/coffee-shops/:id', app.getCoffeeShop)
+httpServer.mount('put', '/coffee-shops/:id', app.updateCoffeeShop)
+httpServer.mount('delete', '/coffee-shops/:id', app.deleteCoffeeShop)
 
-httpServer.mount('get', '/documents', app.findAll)
-httpServer.mount('get', '/documents/count', app.countAll)
-httpServer.mount('get', '/documents/:type', app.find)
-httpServer.mount('post', '/documents/:type', app.create)
-httpServer.mount('get', '/documents/:type/:id', app.get)
-httpServer.mount('get', '/documents/:type/:id/v/:version', app.get)
-httpServer.mount('put', '/documents/:type/:id', app.update)
+httpServer.mount('get', '/coffee-shops/:shopId/orders', app.listOrders)
+httpServer.mount('post', '/coffee-shops/:shopId/orders', app.placeOrder)
+httpServer.mount('get', '/coffee-shops/:shopId/orders/:id', app.getOrder)
+httpServer.mount('put', '/coffee-shops/:shopId/orders/:id', app.changeOrder)
+httpServer.mount('delete', '/coffee-shops/:shopId/orders/:id', app.deleteOrder)
 
 export async function up() {
   await storage.init()
