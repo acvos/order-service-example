@@ -2,9 +2,10 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as expressLogging from 'express-logging'
 import * as cors from 'cors'
-import { LoggerInterface } from '../types'
+import { ValidationError } from './errors/validation-error'
+import { LoggerInterface, Initializable, HttpAdapterInterface } from '../types'
 
-export class ExpressWebServer {
+export class ExpressWebServer implements HttpAdapterInterface, Initializable {
   private logger: LoggerInterface
   private server
   private port
@@ -20,7 +21,7 @@ export class ExpressWebServer {
     this.server.use(expressLogging(this.logger))
   }
 
-  async processRequest(handler, successStatus, req, res) {
+  private async processRequest(handler, successStatus, req, res) {
     const params = { ...(req.params || {}), ...(req.query || {}) }
 
     try {
@@ -32,7 +33,7 @@ export class ExpressWebServer {
         res.status(successStatus).send(data)
       }
     } catch (err) {
-      if (err.name === 'ValidationError') {
+      if (err instanceof ValidationError) {
         this.logger.warn(err)
         res.status(400).send({ message: err.message })
       } else {
@@ -42,12 +43,28 @@ export class ExpressWebServer {
     }
   }
 
-  mount(method, route, handler, successStatus = 200) {
-    this.server[method](route, (req, res) => this.processRequest(handler, successStatus, req, res))
+  get(route, handler) {
+    this.server.get(route, (req, res) => this.processRequest(handler, 200, req, res))
   }
 
-  start() {
-    return new Promise((resolve) => {
+  post(route, handler) {
+    this.server.post(route, (req, res) => this.processRequest(handler, 201, req, res))
+  }
+
+  put(route, handler) {
+    this.server.put(route, (req, res) => this.processRequest(handler, 200, req, res))
+  }
+
+  patch(route, handler) {
+    this.server.patch(route, (req, res) => this.processRequest(handler, 200, req, res))
+  }
+
+  delete(route, handler) {
+    this.server.delete(route, (req, res) => this.processRequest(handler, 200, req, res))
+  }
+
+  up() {
+    return new Promise<void>((resolve) => {
       this.server.$nativeHttpServer = this.server.listen(
         this.port,
         () => {
@@ -58,8 +75,8 @@ export class ExpressWebServer {
     })
   }
 
-  stop() {
-    return new Promise((resolve) => {
+  down() {
+    return new Promise<void>((resolve) => {
       if (!this.server.$nativeHttpServer) {
         resolve()
       }
@@ -69,5 +86,9 @@ export class ExpressWebServer {
         resolve()
       })
     })
+  }
+
+  async isHealthy() {
+    return true
   }
 }

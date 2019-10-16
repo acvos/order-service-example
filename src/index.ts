@@ -18,13 +18,13 @@ const server = new ExpressWebServer({
 })
 
 async function up() {
-  await storage.init()
-  await server.start()
+  await storage.up()
+  await server.up()
 }
 
 async function down() {
-  await storage.stop()
-  await server.stop()
+  await storage.down()
+  await server.down()
 }
 
 // Core

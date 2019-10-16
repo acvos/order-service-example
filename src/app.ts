@@ -1,7 +1,7 @@
-import { StringMap } from './types'
+import { StringMap, StorageInterface } from './types'
 
 export class App {
-  private storage
+  private storage: StorageInterface
 
   constructor({ storage }) {
     this.storage = storage

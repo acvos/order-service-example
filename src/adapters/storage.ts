@@ -1,13 +1,13 @@
 import createStorage from 'refdata-storage'
-import { ValidationError } from '../errors/validation-error'
-import { StringMap, LoggerInterface } from '../types'
+import { ValidationError } from './errors/validation-error'
+import { StringMap, LoggerInterface, StorageInterface, Initializable } from '../types'
 
 type ConfigType = {
   logger: LoggerInterface,
   schema: object[]
 }
 
-export class StorageAdapter {
+export class StorageAdapter implements StorageInterface, Initializable {
   private logger: LoggerInterface
   private storage
 
@@ -16,16 +16,16 @@ export class StorageAdapter {
     this.storage = createStorage({ schema })
   }
 
-  async init() {
+  async up() {
     this.logger.info('[Storage Adapter] starting')
     await this.storage.init()
   }
 
-  async stop() {
+  async down() {
     this.logger.info('[Storage Adapter] stopping')
   }
 
-  isConnected() {
+  async isHealthy() {
     return true
   }
 
@@ -37,15 +37,11 @@ export class StorageAdapter {
     return this.storage.getSchema(name)
   }
 
-  find(type: string, query: StringMap) {
+  async find(type: string, query: StringMap) {
     return this.storage.find({ ...query, type, isDeleted: false })
   }
 
-  validate(type: string, data: StringMap) {
-    return this.storage.validate(type, data)
-  }
-
-  create(type: string, data: StringMap) {
+  async create(type: string, data: StringMap) {
     const errors = this.storage.validate(type, data)
     if (errors) {
       throw new ValidationError(errors)
@@ -67,7 +63,7 @@ export class StorageAdapter {
     }
   }
 
-  update(id: string, data: StringMap) {
+  async update(id: string, data: StringMap) {
     return this.storage.update(id, data)
   }
 
