@@ -38,7 +38,7 @@ export class StorageAdapter {
   }
 
   find(type: string, query: StringMap) {
-    return this.storage.find({ ...query, type })
+    return this.storage.find({ ...query, type, isDeleted: false })
   }
 
   validate(type: string, data: StringMap) {
@@ -56,7 +56,12 @@ export class StorageAdapter {
 
   async get(id: string) {
     try {
-      return await this.storage.get(id)
+      const entity = await this.storage.get(id)
+      if (entity.body.isDeleted) {
+        return
+      }
+
+      return entity
     } catch(e) {
       return
     }
@@ -64,5 +69,17 @@ export class StorageAdapter {
 
   update(id: string, data: StringMap) {
     return this.storage.update(id, data)
+  }
+
+  async delete(id: string) {
+    const entity = await this.storage.get(id)
+    if (!entity || entity.body.isDeleted) {
+      return
+    }
+
+    return this.storage.update(id, {
+      ...entity.body,
+      isDeleted: true
+    })
   }
 }
