@@ -1,0 +1,8 @@
+# Example
+version: '3'
+
+services:
+  order-service:
+    build: .
+    ports:
+      - 3201:80
