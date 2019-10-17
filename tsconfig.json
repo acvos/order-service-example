@@ -6,7 +6,7 @@
     "sourceMap": true,
     "module": "commonjs",
     "lib": ["es7"],
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "include": ["./src/**/*"]
 }

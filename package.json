@@ -5,10 +5,10 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf dist/* && tsc",
+    "build": "rm -rf dist && tsc",
     "start": "node dist/index.js",
     "dev": "nodemon ./src/index --ext 'js, ts' --exec \"ts-node -r dotenv/config\" -L -I",
-    "test": "mocha -r ts-node/register test/**/*.test.ts"
+    "test": "mocha -r ts-node/register ./test/**/*.test.ts"
   },
   "repository": {
     "type": "git",
