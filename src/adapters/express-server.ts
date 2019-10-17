@@ -2,7 +2,7 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as expressLogging from 'express-logging'
 import * as cors from 'cors'
-import { ValidationError } from './errors/validation-error'
+import { ValidationError } from '../errors/validation-error'
 import { LoggerInterface, Initializable, HttpAdapterInterface } from '../types'
 
 export class ExpressWebServer implements HttpAdapterInterface, Initializable {
@@ -86,9 +86,5 @@ export class ExpressWebServer implements HttpAdapterInterface, Initializable {
         resolve()
       })
     })
-  }
-
-  async isHealthy() {
-    return true
   }
 }

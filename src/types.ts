@@ -1,6 +1,7 @@
 type Maybe<T> = T|undefined
 
 export type StringMap = { [key: string]: string }
+export type ValueMap = { [key: string]: string|number|boolean }
 
 export interface LoggerInterface {
   info(message: object|string): void
@@ -19,7 +20,6 @@ export interface HttpAdapterInterface {
 export interface Initializable {
   up(): Promise<void>
   down(): Promise<void>
-  isHealthy(): Promise<boolean>
 }
 
 export type Entity = {
@@ -29,14 +29,15 @@ export type Entity = {
   created_at: string
   modified_at: string
   type: string
-  body: StringMap,
+  body: ValueMap,
   schema: StringMap
 }
 
-export interface StorageInterface {
-  find(type: string, query: StringMap): Promise<Entity[]>
+export interface RepositoryInterface {
+  isConnected(): Promise<boolean>
+  find(query: StringMap, sortBy?: string): Promise<Entity[]>
   get(id: string): Promise<Maybe<Entity>>
-  create(type: string, data: StringMap): Promise<Maybe<Entity>>
+  create(data: StringMap): Promise<Maybe<Entity>>
   update(id: string, data: StringMap): Promise<Maybe<Entity>>
   delete(id: string): Promise<Maybe<Entity>>
 }

@@ -8,23 +8,31 @@
     "build": "rm -rf dist/* && tsc",
     "start": "node dist/index.js",
     "dev": "nodemon ./src/index --ext 'js, ts' --exec \"ts-node -r dotenv/config\" -L -I",
-    "test": "jest"
+    "test": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "repository": {
     "type": "git",
     "url": "ssh://git@bitbucket.navarik.com:7999/dat/dat-boss.git"
   },
   "dependencies": {
+    "@types/chai-http": "^4.2.0",
+    "@types/express": "^4.17.1",
+    "@types/mocha": "^5.2.7",
     "bunyan": "^1.8.12",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
+    "date-and-time": "^0.10.0",
     "express": "^4.17.1",
     "express-logging": "^1.1.1",
-    "refdata-storage": "^6.2.1"
+    "mocha": "^6.2.1",
+    "refdata-storage": "^6.2.1",
+    "sort-on": "^4.1.0",
+    "unix-timestamp": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.12",
     "dotenv": "^8.1.0",
-    "jest": "^24.9.0",
     "nodemon": "^1.19.3",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4"

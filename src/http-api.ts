@@ -1,19 +1,14 @@
 import { HttpAdapterInterface } from './types'
 
 export class HttpApi {
+  private app
   private server: HttpAdapterInterface
-  private storage
 
-  constructor({ server, app, storage, debug = false }) {
+  constructor({ server, app }) {
+    this.app = app
     this.server = server
-    this.storage = storage // @todo generalize dependencies
 
     this.server.get('/health', (req, res) => this.checkHealth(req, res))
-
-    if (debug) {
-      this.server.get('/types', () => storage.schemaNames())
-      this.server.get('/types/:name', ({ params }) => storage.getSchema(params.name))
-    }
 
     this.server.get('/coffee-shops', ({ params }) => app.listCoffeeShops(params))
     this.server.post('/coffee-shops', ({ body }) => app.registerCoffeeShop(body))
@@ -28,11 +23,11 @@ export class HttpApi {
     this.server.delete('/coffee-shops/:shopId/orders/:id', ({ params }) => app.deleteOrder(params.shopId, params.id))
   }
 
-  checkHealth(req, res) {
-    if (!this.storage.isConnected()) {
-      res.status(500).json({ status: 'error', details: 'Storage down' })
-    } else {
+  async checkHealth(req, res) {
+    if (await this.app.isHealthy()) {
       res.json({ status: 'ok' })
+    } else {
+      res.status(500).json({ status: 'error', details: 'Application is down' })
     }
   }
 }
