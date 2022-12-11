@@ -18,7 +18,7 @@
     "bunyan": "^1.8.12",
     "cors": "^2.8.5",
     "date-and-time": "^0.10.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-logging": "^1.1.1",
     "refdata-storage": "^6.2.1",
     "sort-on": "^4.1.0",
